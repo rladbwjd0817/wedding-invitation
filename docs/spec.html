@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>별 컨셉 모바일 청첩장 — Final Spec v1.1</title>
+<style>
+  :root {
+    --color-background-primary: #FFFFFF;
+    --color-background-secondary: #F5F4EF;
+    --color-background-tertiary: #FAF8F3;
+    --color-background-info: #E6F1FB;
+    --color-text-primary: #1F1F1F;
+    --color-text-secondary: #6B6B6B;
+    --color-text-tertiary: #9B9B9B;
+    --color-text-info: #185FA5;
+    --color-border-tertiary: rgba(31, 31, 31, 0.15);
+    --color-border-info: #185FA5;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+    --font-mono: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background-primary: #1F1F1F;
+      --color-background-secondary: #2A2A2A;
+      --color-background-tertiary: #1A1A1A;
+      --color-background-info: #0C447C;
+      --color-text-primary: #FAF8F3;
+      --color-text-secondary: #B0B0B0;
+      --color-text-tertiary: #888888;
+      --color-text-info: #85B7EB;
+      --color-border-tertiary: rgba(250, 248, 243, 0.15);
+      --color-border-info: #85B7EB;
+    }
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+    margin: 0;
+    padding: 24px 16px;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  table { border-collapse: collapse; }
+</style>
+</head>
+<body>
+<div class="container">
+<div style="padding: 0.5rem 0;">
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 18px; margin-bottom: 12px;">
+  <div style="font-size: 10px; color: var(--color-text-secondary); letter-spacing: 1.5px; margin-bottom: 6px;">FINAL SPEC v1.1 · 13 SESSIONS</div>
+  <div style="font-size: 20px; font-weight: 500; margin-bottom: 4px;">별 컨셉 모바일 청첩장</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 12px;">템플릿 기반 부업 · 셀프 서비스 + 검수 · 합법 프리미엄 포지션</div>
+  <div style="padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 6px;">
+    "수치 대신 마음, 직설 대신 우회, 차가움 대신 거리감 있는 부드러움"
+  </div>
+  <div style="padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size: 11px; color: var(--color-text-secondary); line-height: 1.6;">
+    "법적으로 깨끗한, 디렉터가 큐레이션하는 모바일 청첩장"
+  </div>
+</div>
+
+<!-- ===== PART 1: v1.0 — 12세션 누적 결정 ===== -->
+
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin: 16px 0 12px;">
+  <div style="font-size: 10px; color: var(--color-text-secondary); letter-spacing: 1.5px;">PART 1 · 비주얼 · 운영 · 기술 (v1.0, 12세션 누적)</div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">1. 포지셔닝</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">타겟</td><td style="padding: 3px 0;">20-30대 신랑신부</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">차별점 1</td><td style="padding: 3px 0;">축하가 쌓이는 별 인터랙션</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">차별점 2</td><td style="padding: 3px 0;">실시간 미리보기 셀프 폼</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">차별점 3</td><td style="padding: 3px 0;">디렉터 검수 시스템</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">2. 비주얼 시스템</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">메인 톤</td><td style="padding: 3px 0;">차콜 #1F1F1F + 웜화이트 #FAF8F3</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">액센트</td><td style="padding: 3px 0;">골드 #B8956A</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">한글 폰트</td><td style="padding: 3px 0;">Pretendard</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">영문 폰트</td><td style="padding: 3px 0;">Cormorant Garamond</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">별자리 v1</td><td style="padding: 3px 0;">하트 윤곽 + 별 채움</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">별 5색</td><td style="padding: 3px 0;">웜화이트, 골드 3종, 연한 코랄</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">v1.1 변형</td><td style="padding: 3px 0;">차콜 외 톤 2-3종 추가 예정</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">3. 청첩장 구조 (10 섹션)</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    1. 인트로 · 2. 인사말 · 3. 갤러리 · 4. 캘린더<br>
+    5. 오시는 길 · 6. RSVP(옵션) · 7. 마음 전하기<br>
+    <span style="color: var(--color-text-info); font-weight: 500;">8. 축하 메시지 ★ 핵심 차별점</span><br>
+    9. 추가 안내(옵션) · 10. 공유하기
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 2px solid var(--color-border-info); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 11px; color: var(--color-text-info); margin-bottom: 6px; letter-spacing: 0.5px;">★ CORE</div>
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">4. 8번 메시지 인터랙션</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">시작 상태</td><td style="padding: 3px 0;">시드별 5-10 + 더미별 30</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">입력</td><td style="padding: 3px 0;">닉네임 + 메시지 (미니멀)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">분포</td><td style="padding: 3px 0;">하트 윤곽 안 자동 배치</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">내 별 찾기</td><td style="padding: 3px 0;">즉시 강조 + localStorage</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">수치 노출</td><td style="padding: 3px 0;">하객 X / 어드민 O</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">제한</td><td style="padding: 3px 0;">IP당 1일 5개 (소프트)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">결과 보존</td><td style="padding: 3px 0;">PNG + URL (PREMIUM 영구)</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">5. 카피 톤 (v1 부드러움)</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 42%;">캐릭터</td><td style="padding: 3px 0;">사회자/안내자 목소리</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">8번 헤더</td><td style="padding: 3px 0;">두 사람의 밤하늘에</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">8번 서브</td><td style="padding: 3px 0;">당신의 별을 더해주세요</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">디폴트 인사말</td><td style="padding: 3px 0;">"따뜻한 일상" 버전</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">인사말 옵션</td><td style="padding: 3px 0;">3종 + 직접 작성</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">신고 카피</td><td style="padding: 3px 0;">부적절한 메시지 신고 (명확성)</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">6. 모더레이션 3중</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.8;">
+    자동 욕설 필터 · 하객 신고 (3회 시 숨김) · 신랑신부 어드민 페이지
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">7. 셀프 서비스 폼 (7단계)</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    1. 기본정보 · 2. 가족정보 · 3. 인사말<br>
+    4. 사진 (자동 리사이즈) · 5. 마음 전하기<br>
+    6. 부가 설정 · 7. 미리보기 + 결제
+  </div>
+  <div style="font-size: 11px; color: var(--color-text-info); margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary);">
+    실시간 미리보기 + 자동 사진 처리
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">8. 검수 시스템 (4 항목, v1.0)</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    1. 정보 + 결제 정확성 (3분)<br>
+    2. 사진 기본 품질 (2분)<br>
+    3. 카피 톤 + 시드 메시지 작성 (3분)<br>
+    4. 8번 섹션 작동 확인 (2분)
+  </div>
+  <div style="font-size: 11px; color: var(--color-text-info); margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary);">
+    건당 검수 시간 약 10분 · v1.1에서 5번 항목 추가됨 (섹션 17 참고)
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">9. 가격 정책 (3단계 진화)</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0; width: 42%;">Stage 1 (1-2개월)</td><td style="padding: 4px 0;">무료 베타 3-5건</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Stage 2 (3-5개월)</td><td style="padding: 4px 0;">29,000원 얼리 (30명)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Stage 3 (6개월~)</td><td style="padding: 4px 0;">STANDARD 45,000 / PREMIUM 79,000</td></tr>
+  </table>
+  <div style="font-size: 11px; color: var(--color-text-secondary); margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary); line-height: 1.6;">
+    예상 객단가 55,200원 · 월 8건 = 44만원
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">10. 기술 스택</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">프론트엔드</td><td style="padding: 3px 0;">Next.js + Tailwind</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">백엔드/DB</td><td style="padding: 3px 0;">Supabase</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">호스팅</td><td style="padding: 3px 0;">Vercel</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">이미지</td><td style="padding: 3px 0;">Supabase Storage 자동 처리</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">결제</td><td style="padding: 3px 0;">초기 계좌이체 → 토스페이먼츠</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">개발 도구</td><td style="padding: 3px 0;">Claude Code</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">11. 운영 모델</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 42%;">작업 시간</td><td style="padding: 3px 0;">주말 8-10시간</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">건당 처리 시간</td><td style="padding: 3px 0;">약 1.5-2시간 (자동화 후)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">월 처리 가능</td><td style="padding: 3px 0;">8-12건</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">납기</td><td style="padding: 3px 0;">24시간 이내 검수 후 전달</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">12. 4개월 로드맵</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0; width: 28%;">1개월</td><td style="padding: 4px 0;">학습 + 첫 템플릿 설계</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">2개월</td><td style="padding: 4px 0;">별 컨셉 템플릿 완성</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">3개월</td><td style="padding: 4px 0;">셀프 폼 + 베타 테스트</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">4개월</td><td style="padding: 4px 0;">출시 (Stage 2 진입)</td></tr>
+  </table>
+</div>
+
+<!-- ===== PART 2: v1.1 — 13세션 추가 결정 ===== -->
+
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin: 24px 0 12px;">
+  <div style="font-size: 10px; color: var(--color-text-secondary); letter-spacing: 1.5px;">PART 2 · 저작권 · 음원 · 정책 (v1.1, 13세션 추가)</div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 2px solid var(--color-border-info); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 11px; color: var(--color-text-info); margin-bottom: 6px; letter-spacing: 0.5px;">★ CORE DECISION</div>
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">13. 사업 정체성</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">길 선택</td><td style="padding: 3px 0;">길 Y — 합법 프리미엄 포지션</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">시장 위치</td><td style="padding: 3px 0;">한국 청첩장 시장의 명백한 소수</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">차별점</td><td style="padding: 3px 0;">정식 라이선스 + 디렉터 큐레이션</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">회색지대</td><td style="padding: 3px 0;">거부 (살롱드레터 모델 X)</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">14. 음원 운영 — 모델 C+</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">운영 모델</td><td style="padding: 3px 0;">고객 선택 + 본인이 검수에서 삽입</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">고객 접근</td><td style="padding: 3px 0;">30초 미리듣기 클립만</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">전체 파일</td><td style="padding: 3px 0;">본인 어드민 시스템 전용</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">고객 mp3 업로드</td><td style="padding: 3px 0;">불허</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">K-pop · 가요</td><td style="padding: 3px 0;">사용 불가</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">라이선스 주체</td><td style="padding: 3px 0;">본인 (양도 X, 사용 O)</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">15. 음원 단계별 분리 (Phase 0 → 1)</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0; width: 38%;">Phase 0 (1-2개월)</td><td style="padding: 4px 0;">Pixabay + 공유마당 5-7곡</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Phase 0 비용</td><td style="padding: 4px 0;">~₩80,000</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Phase 0 명시</td><td style="padding: 4px 0;">"베타 무료 음원, 정식 출시 시 업그레이드"</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Phase 1 진입 조건</td><td style="padding: 4px 0;">베타 3건 + 유료 결제 1명</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Phase 1 비용</td><td style="padding: 4px 0;">Artlist Pro ₩280,000/년 결제</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">Phase 1 음원</td><td style="padding: 4px 0;">Artlist 큐레이션 10-12곡</td></tr>
+  </table>
+  <div style="font-size: 11px; color: var(--color-text-info); margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary);">
+    시장 검증 후 라이선스 결제 · 적자 위험 최소화
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">16. 음원 풀 큐레이션 가이드</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">검색 키워드</td><td style="padding: 3px 0;">minimal piano, ambient, warm strings</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">차콜 톤</td><td style="padding: 3px 0;">차분 · 깊이 · 4-5곡</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">골드 톤</td><td style="padding: 3px 0;">따뜻 · 우아 · 4-5곡</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">코랄 톤</td><td style="padding: 3px 0;">밝음 · 봄날 · 2-3곡</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">네이밍</td><td style="padding: 3px 0;">"별자리 #N 분위기명"</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">17. 검수 시스템 업그레이드 (4 → 5 항목)</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    1. 정보 + 결제 정확성 (3분)<br>
+    2. 사진 기본 품질 (2분)<br>
+    3. 카피 톤 + 시드 메시지 작성 (3분)<br>
+    4. 8번 섹션 작동 확인 (2분)<br>
+    <span style="color: var(--color-text-info); font-weight: 500;">5. 음원 삽입 + 라이선스 확인 (5분) ★ 신규</span>
+  </div>
+  <div style="font-size: 11px; color: var(--color-text-info); margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary);">
+    건당 검수 시간 약 15분 (기존 10분 + 음원 5분)
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">18. 데이터 모델 (음원)</div>
+  <div style="font-size: 11px; color: var(--color-text-secondary); font-family: var(--font-mono); line-height: 1.7; padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md);">
+interface MusicTrack {<br>
+&nbsp;&nbsp;id, name, mood_tag,<br>
+&nbsp;&nbsp;preview_url,&nbsp;&nbsp;// 30초 (고객)<br>
+&nbsp;&nbsp;full_url,&nbsp;&nbsp;// 전체 (어드민)<br>
+&nbsp;&nbsp;source: 'pixabay' | 'artlist',<br>
+&nbsp;&nbsp;license_proof_url<br>
+}
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">19. 마케팅 메시지</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">메인 카피</td><td style="padding: 3px 0;">법적으로 깨끗한 프리미엄 청첩장</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">서브 카피</td><td style="padding: 3px 0;">디렉터가 큐레이션한 정식 라이선스 음원</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">타겟 인식</td><td style="padding: 3px 0;">VIP 보는 자리에서 안전한 선택</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">사전 안내</td><td style="padding: 3px 0;">구매 전 페이지에 음원 정책 명시</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">20. 응대 카피 — 음원 요청 거절</div>
+  <div style="font-size: 11px; color: var(--color-text-secondary); line-height: 1.7; padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-style: italic;">
+    "안녕하세요! 저희 청첩장은 정식 라이선스 음원만 사용하는 정책이에요. 직장 동료·VIP가 보시는 자리에서 저작권 위반된 음원이 나오면 곤란한 상황이 생길 수 있어서요. 큐레이션된 음원 중에서 비슷한 분위기의 곡을 추천드릴 수 있어요. 어떤 분위기를 원하셨어요?"
+  </div>
+  <div style="font-size: 11px; color: var(--color-text-info); margin-top: 8px;">
+    절대 양보 X · 한 번 흔들리면 모든 고객이 같은 요구
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">21. AI 이미지 정책</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">권장 도구</td><td style="padding: 3px 0;">Adobe Firefly (저작권 클린)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">금지 프롬프트</td><td style="padding: 3px 0;">특정 작가 · 브랜드 스타일 모방</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">기록 보관</td><td style="padding: 3px 0;">프롬프트 + 수정 과정 + 레이어 파일</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">AI 표시</td><td style="padding: 3px 0;">푸터 작은 글씨 (인공지능기본법 대응)</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">고객 사진</td><td style="padding: 3px 0;">고객이 권리자, 본인은 호스팅</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">22. 폰트 라이선스 확인</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0; width: 38%;">Pretendard</td><td style="padding: 3px 0;">SIL OFL · 상업 자유 ✓</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">Cormorant Garamond</td><td style="padding: 3px 0;">Google Fonts · 상업 자유 ✓</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 3px 0;">프리미엄 한글 폰트</td><td style="padding: 3px 0;">추가 시 SaaS 라이선스 별도 필요</td></tr>
+  </table>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">23. 베타 출시 전 액션 (필수)</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    □ Pixabay + 공유마당 가입 후 5-7곡 선정<br>
+    □ 30초 미리듣기 클립 제작 (Audacity)<br>
+    □ 명명 규칙으로 파일 정리<br>
+    □ 호스팅 무료 티어 셋업<br>
+    □ 도메인 구입 (₩30,000)<br>
+    □ Artlist 영업팀 이메일 (미리듣기 클립 OK 확인)<br>
+    □ 구매 전 페이지 음원 정책 명시 카피
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">24. Phase 1 진입 액션</div>
+  <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.9;">
+    □ Artlist Pro 결제 (₩280,000)<br>
+    □ 영수증 PDF 보관 (라이선스 증빙)<br>
+    □ 본인 톤 키워드로 30곡 셰어리스트<br>
+    □ 10-12곡 최종 큐레이션<br>
+    □ Pixabay 풀 → Artlist 풀 교체<br>
+    □ 베타 고객 안내 메시지 발송<br>
+    □ 인스타 · 블로그 본격 마케팅 시작
+  </div>
+</div>
+
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 16px; margin-bottom: 12px;">
+  <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px;">25. 장기 진화 경로 (음원)</div>
+  <table style="width: 100%; font-size: 12px;">
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0; width: 38%;">베타 (~월 5건)</td><td style="padding: 4px 0;">Pixabay + 공유마당</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">중기 (월 10-30건)</td><td style="padding: 4px 0;">Artlist Pro 큐레이션</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">장기 (월 50건+)</td><td style="padding: 4px 0;">매절 작곡 시그니처 사운드</td></tr>
+    <tr><td style="color: var(--color-text-secondary); padding: 4px 0;">최종 형태</td><td style="padding: 4px 0;">별 인터랙션 SFX 포함 매절</td></tr>
+  </table>
+</div>
+
+<!-- ===== FOOTER ===== -->
+
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; margin-top: 16px;">
+  <div style="font-size: 10px; color: var(--color-text-secondary); letter-spacing: 1px; margin-bottom: 6px;">DIRECTING JOURNEY</div>
+  <div style="font-size: 12px; color: var(--color-text-primary); font-weight: 500; margin-bottom: 6px;">13번의 세션, 25개 섹션, 90+ 디렉팅 결정</div>
+  <div style="font-size: 11px; color: var(--color-text-secondary); line-height: 1.7;">
+    이제 본인의 부업이 *완전한 명세서*로 존재해요. 비주얼·운영·기술(v1.0) 위에 저작권·음원·정책(v1.1)까지 더해져, 한국 청첩장 시장에서 이 정도 정밀도로 운영하는 업체는 거의 없을 거예요. Claude Code에서 한 줄씩 구현해 나가시면 됩니다. 부족한 건 만들면서 채워가도 충분해요.
+  </div>
+</div>
+
+</div>
+</div>
+</body>
+</html>
