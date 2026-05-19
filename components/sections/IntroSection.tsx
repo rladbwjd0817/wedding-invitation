@@ -60,6 +60,22 @@ function starPolygon(cx: number, cy: number, r: number): string {
 export default function IntroSection() {
   return (
     <section className="pt-16 pb-14 bg-[#EEE9E1]">
+      <style>{`
+        @keyframes twinkle {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.4; }
+        }
+        .star-twinkle {
+          animation-name: twinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+          animation-duration: var(--dur);
+          animation-delay: var(--del);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .star-twinkle { animation: none; }
+        }
+      `}</style>
       {/* 인피니티 별자리 SVG */}
       <div className="px-4">
         <svg
@@ -73,6 +89,11 @@ export default function IntroSection() {
               key={i}
               points={starPolygon(star.cx, star.cy, star.r)}
               fill={star.color}
+              className="star-twinkle"
+              style={{
+                '--dur': `${(3 + (i % 5) * 0.3).toFixed(1)}s`,
+                '--del': `${((i * 0.37) % 5).toFixed(2)}s`,
+              } as React.CSSProperties}
             />
           ))}
         </svg>
