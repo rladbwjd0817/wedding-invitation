@@ -13,9 +13,9 @@ interface StarData {
   x: number    // 0~100 (%)
   y: number    // 0~100 (%)
   color: string
-  size: number // 5각별 외곽 반지름 (4~7)
-  dur: number  // 반짝임 주기(초)
-  del: number  // 반짝임 딜레이(초)
+  size: number
+  dur: number
+  del: number
 }
 
 // 5각별 polygon 좌표 — viewBox 0 0 20 20, 중심 (10,10)
@@ -33,22 +33,23 @@ function tooClose(x: number, y: number, existing: Pick<StarData, 'x' | 'y'>[]): 
   return existing.some(s => {
     const dx = (x - s.x) * 3.7
     const dy = (y - s.y) * 3.2
-    return dx * dx + dy * dy < 900 // 30px² = 900
+    return dx * dx + dy * dy < 900
   })
 }
 
 // DB 행 → StarData 변환
+// x, y 컬럼이 없으므로 클라이언트에서 랜덤 위치 부여
 function rowToStar(row: Record<string, unknown>): StarData {
   return {
     id: String(row.id),
     nickname: String(row.nickname),
     message: String(row.message),
-    x: Number(row.x),
-    y: Number(row.y),
-    color: String(row.color),
-    size: Number(row.size),
-    dur: Number(row.dur),
-    del: Number(row.del),
+    x: 5 + Math.random() * 85,
+    y: 5 + Math.random() * 52,
+    color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+    size: 4 + Math.floor(Math.random() * 4),
+    dur: parseFloat((3 + Math.random() * 2).toFixed(1)),
+    del: parseFloat((Math.random() * 4).toFixed(2)),
   }
 }
 
@@ -75,7 +76,7 @@ const DUMMY_DATA = [
   { nickname: '혜진', message: '오래오래 사랑하세요 💕' },
 ]
 
-// 더미 별 30개 — 간격 보장 배치 (실제 데이터 없을 때 배경 별로 표시)
+// 더미 별 30개 — 클라이언트에서만 생성 (hydration 방지)
 function buildDummyStars(): StarData[] {
   const stars: StarData[] = []
   const TOTAL = 30
@@ -101,9 +102,9 @@ function buildDummyStars(): StarData[] {
   return stars
 }
 
-const DUMMY_STARS = buildDummyStars()
-
 export default function MessageSection() {
+  // hydration 방지: 서버에서는 빈 배열로 시작, 클라이언트 useEffect에서만 생성
+  const [dummyStars, setDummyStars] = useState<StarData[]>([])
   const [userStars, setUserStars] = useState<StarData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [nickname, setNickname] = useState('')
@@ -111,12 +112,20 @@ export default function MessageSection() {
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
-    // 초기 데이터 로드
+    // 클라이언트에서만 더미 별 생성 (hydration mismatch 방지)
+    setDummyStars(buildDummyStars())
+
+    // 초기 데이터 로드 — nickname, message만 존재하는 컬럼 선택
     supabase
       .from('star_messages')
-      .select('*')
+      .select('id, nickname, message, created_at')
       .order('created_at', { ascending: true })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('[star_messages] load error:', error)
+          return
+        }
+        console.log('[star_messages] loaded:', data?.length ?? 0, 'rows')
         if (data) setUserStars(data.map(rowToStar))
       })
 
@@ -138,7 +147,7 @@ export default function MessageSection() {
     return () => { supabase.removeChannel(channel) }
   }, [])
 
-  const allStars = [...DUMMY_STARS, ...userStars]
+  const allStars = [...dummyStars, ...userStars]
 
   async function addStar() {
     if (!nickname.trim() || !message.trim()) return
@@ -149,22 +158,25 @@ export default function MessageSection() {
       y = 5 + Math.random() * 52
     }
 
+    // DB에는 nickname, message만 저장 (x, y 컬럼 없음)
+    const payload = {
+      nickname: nickname.trim(),
+      message: message.trim(),
+    }
+    console.log('[star_messages] insert payload:', payload)
+
     setNickname('')
     setMessage('')
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 2000)
 
-    await supabase.from('star_messages').insert({
-      nickname: nickname.trim(),
-      message: message.trim(),
-      x,
-      y,
-      color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
-      size: 4 + Math.floor(Math.random() * 4),
-      dur: parseFloat((3 + Math.random() * 2).toFixed(1)),
-      del: parseFloat((Math.random() * 4).toFixed(2)),
-    })
-    // 새 별은 realtime 구독이 자동으로 userStars에 추가
+    const { data, error } = await supabase
+      .from('star_messages')
+      .insert(payload)
+      .select()
+    if (error) console.error('[star_messages] insert error:', error)
+    else console.log('[star_messages] insert success:', data)
+    // 새 별 위치는 realtime 핸들러의 rowToStar에서 랜덤 생성
   }
 
   function tooltipPos(star: StarData): string {
@@ -185,7 +197,6 @@ export default function MessageSection() {
         @media (prefers-reduced-motion: reduce) {
           .star-msg { animation: none !important; }
         }
-        /* 자동완성(autofill) 시 브라우저 배경 덮어쓰기 */
         .msg-input:-webkit-autofill,
         .msg-input:-webkit-autofill:hover,
         .msg-input:-webkit-autofill:focus {
@@ -202,12 +213,11 @@ export default function MessageSection() {
         </p>
       </div>
 
-      {/* 밤하늘 영역 — 별들 + 나무 실루엣 */}
+      {/* 밤하늘 영역 */}
       <div
         className="relative mx-6 h-80 border border-warm-white/10 rounded-xl overflow-hidden"
         onClick={() => setActiveId(null)}
       >
-        {/* 별들 */}
         {allStars.map((star) => (
           <button
             key={star.id}
@@ -248,7 +258,7 @@ export default function MessageSection() {
           </button>
         ))}
 
-        {/* 3단 레이어 나무 실루엣 — 대칭, 섹션 하단 40% */}
+        {/* 나무 실루엣 */}
         <svg
           className="absolute bottom-0 left-0 w-full pointer-events-none"
           viewBox="0 0 400 150"
