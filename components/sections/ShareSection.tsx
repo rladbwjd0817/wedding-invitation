@@ -1,13 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+declare global {
+  interface Window {
+    Kakao: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  }
+}
+
+const KAKAO_APP_KEY = 'ce0b7f577dbd7031221c5f63035179b4'
 
 export default function ShareSection() {
   const [toast, setToast] = useState(false)
 
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js'
+    script.onload = () => {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_APP_KEY)
+      }
+    }
+    document.head.appendChild(script)
+
+    return () => {
+      const existing = document.querySelector(
+        'script[src*="kakao_js_sdk"]'
+      )
+      if (existing) existing.remove()
+    }
+  }, [])
+
   function handleKakao() {
-    // 배포 후 카카오 SDK 연동 예정
-    console.log('[ShareSection] 카카오톡 공유 버튼 클릭')
+    if (!window.Kakao?.Share) return
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: 'YUJEONG · JAEKEUN',
+        description: '2027. 10. 23. SAT 오후 12시 | 울산시티컨벤션',
+        imageUrl: '', // 나중에 대표 이미지 URL 추가
+        link: {
+          mobileWebUrl: window.location.origin,
+          webUrl: window.location.origin,
+        },
+      },
+    })
   }
 
   async function handleCopy() {
