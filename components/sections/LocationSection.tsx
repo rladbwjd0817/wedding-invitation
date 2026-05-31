@@ -1,3 +1,13 @@
+'use client'
+
+import { useEffect } from 'react'
+
+declare global {
+  interface Window {
+    kakao: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  }
+}
+
 // 더미 장소 데이터 — 나중에 props로 교체 예정
 const VENUE = {
   name: '울산시티컨벤션',
@@ -10,6 +20,34 @@ const VENUE = {
 }
 
 export default function LocationSection() {
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=ce0b7f577dbd7031221c5f63035179b4&autoload=false`
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById('kakao-map')
+        const options = {
+          center: new window.kakao.maps.LatLng(VENUE.lat, VENUE.lng),
+          level: 3,
+        }
+        const map = new window.kakao.maps.Map(container, options)
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(VENUE.lat, VENUE.lng),
+        })
+        marker.setMap(map)
+      })
+    }
+    document.head.appendChild(script)
+
+    return () => {
+      // 컴포넌트 언마운트 시 스크립트 제거
+      const existing = document.querySelector(
+        `script[src*="dapi.kakao.com"]`
+      )
+      if (existing) existing.remove()
+    }
+  }, [])
+
   return (
     <section className="py-16 bg-charcoal">
       {/* 섹션 제목 */}
@@ -20,13 +58,8 @@ export default function LocationSection() {
         </p>
       </div>
 
-      {/* 지도 플레이스홀더 — 배포 후 카카오맵 임베드로 교체 예정 */}
-      <div
-        className="w-full h-62.5 flex items-center justify-center"
-        style={{ backgroundColor: '#2A2A2A' }}
-      >
-        <p className="font-sans text-xs text-warm-white/50">🗺️ 지도는 배포 후 표시됩니다</p>
-      </div>
+      {/* 카카오맵 */}
+      <div id="kakao-map" className="w-full h-62.5" />
 
       {/* 외부 지도 앱 연결 버튼 */}
       <div className="px-6 mt-4 flex gap-3">
