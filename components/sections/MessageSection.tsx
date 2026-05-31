@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 // 별 5색 팔레트
 const STAR_COLORS = ['#FAF8F3', '#B8956A', '#D4B896', '#9A7A52', '#E8C4B8']
@@ -36,6 +37,21 @@ function tooClose(x: number, y: number, existing: Pick<StarData, 'x' | 'y'>[]): 
   })
 }
 
+// DB 행 → StarData 변환
+function rowToStar(row: Record<string, unknown>): StarData {
+  return {
+    id: String(row.id),
+    nickname: String(row.nickname),
+    message: String(row.message),
+    x: Number(row.x),
+    y: Number(row.y),
+    color: String(row.color),
+    size: Number(row.size),
+    dur: Number(row.dur),
+    del: Number(row.del),
+  }
+}
+
 const DUMMY_DATA = [
   { nickname: '준호', message: '오래오래 행복하세요 ✨' },
   { nickname: '수진이', message: '두 분 진심으로 축하드려요!' },
@@ -59,8 +75,7 @@ const DUMMY_DATA = [
   { nickname: '혜진', message: '오래오래 사랑하세요 💕' },
 ]
 
-// 더미 별 30개 — 간격 보장 배치
-// (20개 데이터 × 반복하되 겹침 회피)
+// 더미 별 30개 — 간격 보장 배치 (실제 데이터 없을 때 배경 별로 표시)
 function buildDummyStars(): StarData[] {
   const stars: StarData[] = []
   const TOTAL = 30
@@ -76,8 +91,7 @@ function buildDummyStars(): StarData[] {
       id: `dummy-${i}`,
       nickname: d.nickname,
       message: d.message,
-      x,
-      y,
+      x, y,
       color: STAR_COLORS[i % STAR_COLORS.length],
       size: 4 + (i % 4),
       dur: 3 + (i % 5) * 0.4,
@@ -89,8 +103,6 @@ function buildDummyStars(): StarData[] {
 
 const DUMMY_STARS = buildDummyStars()
 
-const STORAGE_KEY = 'wedding_stars_v1'
-
 export default function MessageSection() {
   const [userStars, setUserStars] = useState<StarData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -99,15 +111,36 @@ export default function MessageSection() {
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) setUserStars(JSON.parse(saved) as StarData[])
-    } catch { /* localStorage 접근 실패 시 무시 */ }
+    // 초기 데이터 로드
+    supabase
+      .from('star_messages')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .then(({ data }) => {
+        if (data) setUserStars(data.map(rowToStar))
+      })
+
+    // Realtime 구독 — 다른 사람이 추가한 별 실시간 반영
+    const channel = supabase
+      .channel('star_messages_realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'star_messages' },
+        (payload) => {
+          const newStar = rowToStar(payload.new as Record<string, unknown>)
+          setUserStars(prev =>
+            prev.some(s => s.id === newStar.id) ? prev : [...prev, newStar]
+          )
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   }, [])
 
   const allStars = [...DUMMY_STARS, ...userStars]
 
-  function addStar() {
+  async function addStar() {
     if (!nickname.trim() || !message.trim()) return
     let x = 5 + Math.random() * 85
     let y = 5 + Math.random() * 52
@@ -115,8 +148,13 @@ export default function MessageSection() {
       x = 5 + Math.random() * 85
       y = 5 + Math.random() * 52
     }
-    const newStar: StarData = {
-      id: `user-${Date.now()}`,
+
+    setNickname('')
+    setMessage('')
+    setSubmitted(true)
+    setTimeout(() => setSubmitted(false), 2000)
+
+    await supabase.from('star_messages').insert({
       nickname: nickname.trim(),
       message: message.trim(),
       x,
@@ -125,14 +163,8 @@ export default function MessageSection() {
       size: 4 + Math.floor(Math.random() * 4),
       dur: parseFloat((3 + Math.random() * 2).toFixed(1)),
       del: parseFloat((Math.random() * 4).toFixed(2)),
-    }
-    const next = [...userStars, newStar]
-    setUserStars(next)
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch { /* 무시 */ }
-    setNickname('')
-    setMessage('')
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 2000)
+    })
+    // 새 별은 realtime 구독이 자동으로 userStars에 추가
   }
 
   function tooltipPos(star: StarData): string {
@@ -217,19 +249,13 @@ export default function MessageSection() {
         ))}
 
         {/* 3단 레이어 나무 실루엣 — 대칭, 섹션 하단 40% */}
-        {/*
-          viewBox 0 0 400 150 → 컨테이너 370px 기준 표시 높이 ≈ 139px (43%)
-          translate(100, -40): 원본 좌표계(200×200, 나무 top y=42)를 400 viewBox 중앙·상단 정렬
-        */}
         <svg
           className="absolute bottom-0 left-0 w-full pointer-events-none"
           viewBox="0 0 400 150"
           aria-hidden="true"
         >
           <g transform="translate(100, -40)" fill="#2D2D2D">
-            {/* 줄기 */}
             <rect x="93" y="140" width="14" height="50" />
-            {/* 수관 — 위로 갈수록 좁아지는 3단 레이어 */}
             <ellipse cx="100" cy="130" rx="55" ry="40" />
             <ellipse cx="100" cy="105" rx="45" ry="35" />
             <ellipse cx="100" cy="82"  rx="35" ry="28" />
