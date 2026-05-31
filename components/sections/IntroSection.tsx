@@ -1,51 +1,39 @@
-// 레무니스케이트(∞) 매개변수 방정식으로 사전 계산한 별 좌표
-// x(t) = 200 + 125√2 · cos(t) / (1 + sin²t)
-// y(t) = 100 + 125√2 · cos(t)·sin(t) / (1 + sin²t)
-// viewBox 0 0 400 200 기준 (a=125, cx=200, cy=100)
-//
-// 좌표·크기·색 조정이 필요하면 이 배열만 수정하세요
-const STARS: readonly { cx: number; cy: number; r: number; color: string }[] = [
-  // ── 큰 별 (r 7.5) — 양 끝점 ─────────────────────────────────────────
-  { cx: 377, cy: 100, r: 7.5, color: '#B8956A' }, // 오른쪽 끝    t = 0°
-  { cx:  23, cy: 100, r: 7.5, color: '#9C7A4F' }, // 왼쪽 끝     t = 180°
+// 전갈자리 별 좌표 — viewBox 0 0 440 240 기준
+// glow: 'antares' | 'medium' | 'small' — 글로우 강도 구분
+const STARS: readonly { cx: number; cy: number; r: number; color: string; glow: 'antares' | 'medium' | 'small' }[] = [
+  // ── Antares (심장, 제일 밝은 별) — 골드 강조 [인덱스 0] ──────────────
+  { cx: 240, cy: 135, r: 9.0 * 2.5 * 0.7, color: '#D4A843', glow: 'antares' }, // Antares
 
-  // ── 양 끝점 위아래 보강 (r 4) ───────────────────────────────────────
-  { cx: 360, cy:  59, r: 4.0, color: '#E8A599' }, // 오른쪽 끝 위  t = 345°
-  { cx: 360, cy: 141, r: 4.0, color: '#9C7A4F' }, // 오른쪽 끝 아래 t = 15°
-  { cx:  40, cy:  59, r: 4.0, color: '#D4B896' }, // 왼쪽 끝 위   t = 165°
-  { cx:  40, cy: 141, r: 4.0, color: '#B8956A' }, // 왼쪽 끝 아래  t = 195°
+  // ── 머리 / 집게발 영역 (Antares 왼쪽) [인덱스 1-3] ──────────────────
+  { cx: 160, cy:  95, r: 5.0 * 1.8 * 0.8, color: '#F0C96A', glow: 'medium'  }, // 별 1
+  { cx: 100, cy: 115, r: 4.0 * 1.8 * 0.8, color: '#B8892A', glow: 'medium'  }, // 별 2
+  { cx:  50, cy: 145, r: 4.5 * 1.8 * 0.8, color: '#FFDD88', glow: 'medium'  }, // 별 3
 
-  // ── 교차점 강조 (r 3~5) — "두 사람이 만나는 지점" ────────────────────
-  { cx: 200, cy: 100, r: 5.0, color: '#B8956A' }, // 교차점 정중앙  t = 90°
-  { cx: 184, cy:  85, r: 3.0, color: '#FAF8F3' }, // 교차점 왼위   t ≈ 100°
-  { cx: 216, cy: 115, r: 3.0, color: '#E8A599' }, // 교차점 오른아래 t ≈ 80°
-  { cx: 175, cy:  75, r: 3.5, color: '#E8A599' }, // 교차점 위     t ≈ 106°
-  { cx: 225, cy: 125, r: 3.5, color: '#D4B896' }, // 교차점 아래   t ≈ 74°
-  // 교차점 보조 — 오른위·왼아래 방향 보강 (r 2~2.5, 기존보다 작게)
-  { cx: 216, cy:  85, r: 2.5, color: '#D4B896' }, // 교차점 오른위  t ≈ 280°
-  { cx: 184, cy: 115, r: 2.5, color: '#FAF8F3' }, // 교차점 왼아래  t ≈ 260°
-  { cx: 232, cy:  70, r: 2.0, color: '#9C7A4F' }, // 교차점 오른위 더   t ≈ 290°
-  { cx: 342, cy: 155, r: 2.0, color: '#B8956A' }, // 오른쪽 아래 바깥 빈 구간  t ≈ 22.5°
-  // 곡선 빈 구간 보강 (r 1.8, 가장 작은 보조별)
-  { cx: 342, cy:  45, r: 1.8, color: '#FAF8F3' }, // 오른쪽 위 곡선 빈 구간  t ≈ 337.5°
-  { cx:  58, cy:  45, r: 1.8, color: '#E8A599' }, // 왼쪽 위 곡선 빈 구간   t ≈ 157.5°
-  { cx: 266, cy: 152, r: 1.8, color: '#D4B896' }, // 오른쪽 아래 곡선 빈 구간 t ≈ 52.5°
-  { cx: 145, cy:  53, r: 1.8, color: '#9C7A4F' }, // 왼쪽 위 안쪽 빈 구간   t ≈ 122°
+  // ── 몸통 (Antares 아래쪽) [인덱스 4-5] ──────────────────────────────
+  { cx: 180, cy: 165, r: 3.5 * 1.8 * 0.8, color: '#F2C4A0', glow: 'small'   }, // 별 4
+  { cx: 220, cy: 205, r: 3.0 * 1.8 * 0.8, color: '#E8B49A', glow: 'small'   }, // 별 5
 
-  // ── 오른쪽 루프 (r 3.5~5) ────────────────────────────────────────────
-  { cx: 322, cy:  39, r: 5.0, color: '#E8A599' }, // 오른쪽 위 바깥  t = 330°
-  { cx: 322, cy: 161, r: 5.0, color: '#D4B896' }, // 오른쪽 아래 바깥 t = 30°
-  { cx: 283, cy:  41, r: 4.5, color: '#D4B896' }, // 오른쪽 위 중간  t = 315°
-  { cx: 283, cy: 159, r: 4.5, color: '#9C7A4F' }, // 오른쪽 아래 중간 t = 45°
-  { cx: 251, cy:  56, r: 3.5, color: '#B8956A' }, // 오른쪽 위 안쪽  t = 300°
+  // ── 꼬리 곡선 (오른쪽으로 휘며 올라감) [인덱스 6-8] ─────────────────
+  { cx: 280, cy: 225, r: 3.5 * 1.8 * 0.8, color: '#F0C0A8', glow: 'small'   }, // 별 6
+  { cx: 330, cy: 195, r: 4.0 * 1.8 * 0.8, color: '#D4A843', glow: 'medium'  }, // 별 7
+  { cx: 370, cy: 155, r: 3.5 * 1.8 * 0.8, color: '#B8892A', glow: 'small'   }, // 별 8
 
-  // ── 왼쪽 루프 (r 3.5~5) ──────────────────────────────────────────────
-  { cx:  78, cy:  39, r: 5.0, color: '#D4B896' }, // 왼쪽 위 바깥   t = 150°
-  { cx:  78, cy: 161, r: 5.0, color: '#E8A599' }, // 왼쪽 아래 바깥  t = 210°
-  { cx: 117, cy:  41, r: 4.5, color: '#B8956A' }, // 왼쪽 위 중간   t = 135°
-  { cx: 117, cy: 159, r: 4.5, color: '#D4B896' }, // 왼쪽 아래 중간  t = 225°
-  { cx: 150, cy: 144, r: 3.5, color: '#9C7A4F' }, // 왼쪽 아래 안쪽  t = 240°
+  // ── 꼬리 끝 (Shaula 영역) [인덱스 9-11] ─────────────────────────────
+  { cx: 390, cy: 105, r: 5.0 * 1.8 * 0.8, color: '#E8B49A', glow: 'medium'  }, // 별 9 — 밝은 꼬리별
+  { cx: 380, cy:  55, r: 4.0 * 1.8 * 0.7, color: '##F2C4A0', glow: 'medium'  }, // 별 10
+  { cx: 360, cy:  15, r: 3.0 * 1.8 * 0.8, color: '#B8892A', glow: 'small'   }, // 별 11
 ]
+
+const GLOW: Record<'antares' | 'medium' | 'small', string> = {
+  antares: 'drop-shadow(0 0 10px #FFE99A) drop-shadow(0 0 20px #D4A843)',
+  medium:  'drop-shadow(0 0 5px #FFE99A)',
+  small:   'drop-shadow(0 0 2px #F0C96A)',
+}
+
+// 별 연결 순서: 별1→별2→별3→Antares→별4→별5→별6→별7→별8→별9→별10→별11
+const LINE_PATH = [1, 2, 3, 0, 4, 5, 6, 7, 8, 9, 10, 11]
+  .map((i, seq) => `${seq === 0 ? 'M' : 'L'} ${STARS[i].cx} ${STARS[i].cy}`)
+  .join(' ')
 
 // 5각별 polygon 좌표 생성 — 외곽 반지름 r, 내부 반지름 r * 0.42
 function starPolygon(cx: number, cy: number, r: number): string {
@@ -76,14 +64,24 @@ export default function IntroSection() {
           .star-twinkle { animation: none; }
         }
       `}</style>
-      {/* 인피니티 별자리 SVG */}
+
       <div className="px-4">
         <svg
-          viewBox="0 0 400 200"
+          viewBox="0 0 440 240"
           className="w-full"
           role="img"
-          aria-label="인피니티 모양 별자리"
+          aria-label="전갈자리 별자리"
         >
+          {/* 연결선 — 별 뒤에 깔리도록 먼저 렌더링 */}
+          <path
+            d={LINE_PATH}
+            stroke="#F0C96A"
+            strokeOpacity="0.25"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
           {STARS.map((star, i) => (
             <polygon
               key={i}
@@ -93,6 +91,7 @@ export default function IntroSection() {
               style={{
                 '--dur': `${(3 + (i % 5) * 0.3).toFixed(1)}s`,
                 '--del': `${((i * 0.37) % 5).toFixed(2)}s`,
+                filter: GLOW[star.glow],
               } as React.CSSProperties}
             />
           ))}
@@ -100,12 +99,12 @@ export default function IntroSection() {
       </div>
 
       {/* 이름 · 날짜 */}
-      <div className="mt-2 px-6 text-center">
+      <div className="mt-10 px-6 text-center">
         <p className="font-serif text-3xl text-charcoal tracking-wide">
           YUJEONG <span className="text-gold">·</span> JAEKEUN
         </p>
         <p className="mt-3 font-sans text-xs tracking-[0.2em] text-charcoal/50">
-          2026. 9. 19. SAT
+          2027. 10. 23. SAT
         </p>
       </div>
     </section>
