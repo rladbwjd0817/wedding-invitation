@@ -66,19 +66,11 @@ const DUMMY_DATA = [
   { nickname: '예은',  message: '평생 서로 아껴주세요' },
   { nickname: '동현',  message: '행복하게 사세요!' },
   { nickname: '지윤',  message: '새 출발 진심으로 응원해요' },
-  { nickname: '현서',  message: '두 분 잘 어울려요 ❤️' },
-  { nickname: '승호',  message: '결혼 너무 축하해!' },
-  { nickname: '미래',  message: '항상 웃으며 사세요' },
-  { nickname: '하준',  message: '오래 행복하세요 🌟' },
-  { nickname: '서연',  message: '두 분 정말 잘 어울려요' },
-  { nickname: '태양',  message: '축복합니다!' },
-  { nickname: '나연',  message: '새 가정 화이팅!' },
-  { nickname: '지호',  message: '평생 함께 행복하세요' },
 ]
 
 function buildDummyStars(): StarData[] {
   const stars: StarData[] = []
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 5; i++) {
     const d = DUMMY_DATA[i % DUMMY_DATA.length]
     let x = 5 + ((i * 17 + 7) % 90)
     let y = 5 + ((i * 13 + 3) % 52)
