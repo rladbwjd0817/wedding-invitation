@@ -33,10 +33,12 @@ const INPUT_CLS =
 // ─── 페이지 ──────────────────────────────────────────────────────────────────
 export default function AdminPage() {
   // 인증
-  const [authed,   setAuthed]   = useState(false)
-  const [groom,    setGroom]    = useState('')
-  const [bride,    setBride]    = useState('')
-  const [authErr,  setAuthErr]  = useState(false)
+  const [authed,     setAuthed]     = useState(false)
+  const [groom,      setGroom]      = useState('')
+  const [bride,      setBride]      = useState('')
+  const [authErr,    setAuthErr]    = useState(false)
+  const [showGroom,  setShowGroom]  = useState(false)
+  const [showBride,  setShowBride]  = useState(false)
 
   // 방명록
   const [records,    setRecords]    = useState<MessageRecord[]>([])
