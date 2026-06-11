@@ -48,7 +48,7 @@ export default function ShareSection() {
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(window.location.href)
+      await navigator.clipboard.writeText('https://wedding-invitation-eight-dusky-18.vercel.app')
     } catch { /* clipboard API 미지원 환경 */ }
     setToast(true)
     setTimeout(() => setToast(false), 2000)
