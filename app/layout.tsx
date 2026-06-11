@@ -11,8 +11,21 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "별 컨셉 모바일 청첩장",
-  description: "법적으로 깨끗한 프리미엄 청첩장",
+  title: 'YUJEONG · JAEKEUN',
+  description: '2027. 10. 23. SAT 오후 12시 | 울산시티컨벤션',
+  openGraph: {
+    title: 'YUJEONG · JAEKEUN',
+    description: '2027. 10. 23. SAT 오후 12시 | 울산시티컨벤션',
+    url: 'https://wedding-invitation-eight-dusky-18.vercel.app',
+    images: [
+      {
+        url: 'https://wedding-invitation-eight-dusky-18.vercel.app/images/landing/landing.jpg',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
