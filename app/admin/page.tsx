@@ -3,9 +3,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
-// ─── 관리자 인증 코드 (나중에 실제 생년월일로 교체) ─────────────────────────────
-const GROOM_CODE = '20000101'
-const BRIDE_CODE  = '20000202'
 
 // ─── 타입 ────────────────────────────────────────────────────────────────────
 interface MessageRecord {
@@ -47,12 +44,17 @@ export default function AdminPage() {
   const [delConfirm, setDelConfirm] = useState<string | null>(null) // 삭제 확인 중인 id
 
   // ── 인증 ────────────────────────────────────────────────────────────────────
-  function handleAuth() {
-    if (groom.trim() === GROOM_CODE && bride.trim() === BRIDE_CODE) {
+  async function handleAuth() {
+    const { data } = await supabase
+      .from('admin_credentials')
+      .select('groom_birth, bride_birth')
+      .single()
+
+    if (!data || groom.trim() !== data.groom_birth || bride.trim() !== data.bride_birth) {
+      setAuthErr(true)
+    } else {
       setAuthed(true)
       setAuthErr(false)
-    } else {
-      setAuthErr(true)
     }
   }
 
