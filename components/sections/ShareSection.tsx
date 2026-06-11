@@ -37,7 +37,7 @@ export default function ShareSection() {
       content: {
         title: 'YUJEONG · JAEKEUN',
         description: '2027. 10. 23. SAT 오후 12시 | 울산시티컨벤션',
-        imageUrl: 'https://wedding-invitation-eight-dusky-18.vercel.app/images/gallery/landing.jpg',
+        imageUrl: 'https://wedding-invitation-eight-dusky-18.vercel.app/images/landing/landing.jpg',
         link: {
           mobileWebUrl: 'https://wedding-invitation-eight-dusky-18.vercel.app',
           webUrl: 'https://wedding-invitation-eight-dusky-18.vercel.app',

@@ -50,7 +50,7 @@ export default function LandingPage() {
       >
         {/* 배경 사진 */}
         <Image
-          src="/images/gallery/landing.jpg"
+          src="/images/landing/landing.jpg"
           alt="웨딩 사진"
           fill
           priority
