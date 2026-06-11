@@ -5,22 +5,25 @@ import { supabase } from '@/lib/supabase'
 
 // ─── 상수 ───────────────────────────────────────────────────────────────────
 const STAR_COLORS = ['#FAF8F3', '#B8956A', '#D4B896', '#9A7A52', '#E8C4B8']
-const MY_STAR_IDS_KEY = 'my_star_ids' // localStorage key — string[] (UUID 배열)
+const MY_STAR_IDS_KEY = 'my_star_ids'
 
 // ─── 타입 ────────────────────────────────────────────────────────────────────
 interface StarData {
   id: string
   nickname: string
   message: string
-  x: number    // 0~100 (%)
-  y: number    // 0~100 (%)
+  x: number
+  y: number
   color: string
   size: number
   dur: number
   del: number
 }
 
-// ─── 순수 모듈 레벨 함수 (컴포넌트 외부) ─────────────────────────────────────
+type ModalMode = 'none' | 'pw_check' | 'edit'
+type ModalAction = 'edit' | 'delete'
+
+// ─── 모듈 레벨 함수 ───────────────────────────────────────────────────────────
 
 function starPoints(r: number): string {
   const inner = r * 0.42
@@ -35,7 +38,7 @@ function tooClose(x: number, y: number, existing: Pick<StarData, 'x' | 'y'>[]): 
   return existing.some(s => {
     const dx = (x - s.x) * 3.7
     const dy = (y - s.y) * 3.2
-    return dx * dx + dy * dy < 900 // 30px
+    return dx * dx + dy * dy < 900
   })
 }
 
@@ -57,7 +60,6 @@ function rowToStar(row: Record<string, unknown>): StarData {
   }
 }
 
-// 더미별 — 결정론적(Math.random 없음), 서버/클라이언트 동일
 const DUMMY_DATA = [
   { nickname: '준호',  message: '오래오래 행복하세요 ✨' },
   { nickname: '수진이', message: '두 분 진심으로 축하드려요!' },
@@ -92,29 +94,52 @@ function buildDummyStars(): StarData[] {
   return stars
 }
 
-const DUMMY_STARS = buildDummyStars() // 모듈 로드 시 한 번만 계산
+const DUMMY_STARS = buildDummyStars()
+
+// ─── 공용 모달 스타일 ─────────────────────────────────────────────────────────
+const MODAL_CARD: React.CSSProperties = {
+  backgroundColor: '#2A2A2A',
+  border: '0.5px solid #B8956A',
+}
+const MODAL_OVERLAY: React.CSSProperties = {
+  backgroundColor: 'rgba(0,0,0,0.6)',
+}
 
 // ─── 컴포넌트 ─────────────────────────────────────────────────────────────────
 export default function MessageSection() {
+  // ── 별 상태 ──
   const [userStars,    setUserStars]   = useState<StarData[]>([])
-  const [myStarIds,    setMyStarIds]   = useState<string[]>([])  // localStorage 로드 전 []
+  const [myStarIds,    setMyStarIds]   = useState<string[]>([])
   const [highlightMe,  setHighlightMe] = useState(false)
-  const [noStarToast,  setNoStarToast] = useState(false)
   const [activeId,     setActiveId]    = useState<string | null>(null)
+
+  // ── 입력 폼 ──
   const [nickname,     setNickname]    = useState('')
   const [message,      setMessage]     = useState('')
+  const [password,     setPassword]    = useState('')
   const [submitted,    setSubmitted]   = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // ── 모달 상태 기계 ──
+  const [modalMode,    setModalMode]   = useState<ModalMode>('none')
+  const [modalStarId,  setModalStarId] = useState<string | null>(null)
+  const [modalAction,  setModalAction] = useState<ModalAction>('edit')
+  const [pwInput,      setPwInput]     = useState('')
+  const [editNick,     setEditNick]    = useState('')
+  const [editMsg,      setEditMsg]     = useState('')
+
+  // ── 토스트 ──
+  const [noStarToast,  setNoStarToast]  = useState(false)
+  const [pwErrToast,   setPwErrToast]   = useState(false)
+  const [deleteToast,  setDeleteToast]  = useState(false)
+
   const skyRef = useRef<HTMLDivElement>(null)
 
-  // myStarIds 변화 추적 — 버튼 표시 디버그용
   useEffect(() => {
     console.log('myStarIds:', myStarIds)
   }, [myStarIds])
 
   useEffect(() => {
-    // ① localStorage에서 내 별 ID 복원 — setTimeout으로 비동기 setState (React Compiler 규칙 준수)
     setTimeout(() => {
       try {
         const saved = JSON.parse(localStorage.getItem(MY_STAR_IDS_KEY) || '[]') as string[]
@@ -122,7 +147,6 @@ export default function MessageSection() {
       } catch { /* ignore */ }
     }, 0)
 
-    // ② Supabase 초기 로드
     supabase
       .from('star_messages')
       .select('id, nickname, message')
@@ -132,7 +156,6 @@ export default function MessageSection() {
         if (data)  setUserStars(data.map(row => rowToStar(row as Record<string, unknown>)))
       })
 
-    // ③ Realtime 구독 — 채널명을 effect 내에서 생성해 render 중 불순 함수 호출 방지
     const chName = `star_ch_${Date.now()}`
     const channel = supabase
       .channel(chName)
@@ -154,13 +177,13 @@ export default function MessageSection() {
 
   const allStars = [...DUMMY_STARS, ...userStars]
 
+  // ── 별 달기 ──────────────────────────────────────────────────────────────────
   async function addStar() {
-    if (!nickname.trim() || !message.trim()) return
-    if (isSubmitting) return // StrictMode 이중 실행 방지
+    if (!nickname.trim() || !message.trim() || password.length !== 4) return
+    if (isSubmitting) return
 
     setIsSubmitting(true)
 
-    // 위치 탐색 — 기존 별들과 30px 이상 거리
     let pos = randomPos()
     const current = [...DUMMY_STARS, ...userStars]
     for (let t = 0; t < 80 && tooClose(pos.x, pos.y, current); t++) {
@@ -169,35 +192,35 @@ export default function MessageSection() {
 
     const nick = nickname.trim()
     const msg  = message.trim()
+    const pw   = password
 
     setNickname('')
     setMessage('')
+    setPassword('')
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 2000)
 
     try {
       const { data, error } = await supabase
         .from('star_messages')
-        .insert([{ nickname: nick, message: msg }])
+        .insert([{ nickname: nick, message: msg, password: pw }])
         .select()
 
       console.log('insert result:', data, error)
-
       if (error) { console.error('[stars] insert error:', error); return }
 
-      // insert 성공 → id를 localStorage에 추가
       const newId  = String(data[0].id)
       console.log('새 별 id:', newId, '| 기존 myStarIds:', myStarIds)
       const newIds = [...myStarIds, newId]
       localStorage.setItem(MY_STAR_IDS_KEY, JSON.stringify(newIds))
       setMyStarIds(newIds)
       console.log('myStarIds 업데이트 →', newIds)
-      // userStars 직접 추가 없음 — Realtime이 처리
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  // ── 내 별 찾기 ───────────────────────────────────────────────────────────────
   function findMyStar() {
     if (myStarIds.length === 0) {
       setNoStarToast(true)
@@ -209,13 +232,84 @@ export default function MessageSection() {
     setTimeout(() => setHighlightMe(false), 2400)
   }
 
+  // ── 비밀번호 모달 열기 ────────────────────────────────────────────────────────
+  function openPwModal(starId: string, action: ModalAction) {
+    setModalStarId(starId)
+    setModalAction(action)
+    setPwInput('')
+    setModalMode('pw_check')
+    setActiveId(null)
+  }
+
+  // ── 비밀번호 확인 ─────────────────────────────────────────────────────────────
+  async function handlePwConfirm() {
+    if (!modalStarId || pwInput.length !== 4) return
+
+    const { data } = await supabase
+      .from('star_messages')
+      .select('id, nickname, message, password')
+      .eq('id', modalStarId)
+      .single()
+
+    if (!data || data.password !== pwInput) {
+      setPwErrToast(true)
+      setTimeout(() => setPwErrToast(false), 2000)
+      setPwInput('')
+      return
+    }
+
+    if (modalAction === 'delete') {
+      const { error } = await supabase
+        .from('star_messages')
+        .delete()
+        .eq('id', modalStarId)
+
+      if (!error) {
+        setUserStars(prev => prev.filter(s => s.id !== modalStarId))
+        const newIds = myStarIds.filter(id => id !== modalStarId)
+        localStorage.setItem(MY_STAR_IDS_KEY, JSON.stringify(newIds))
+        setMyStarIds(newIds)
+      }
+      setModalMode('none')
+      setDeleteToast(true)
+      setTimeout(() => setDeleteToast(false), 2000)
+    } else {
+      setEditNick(data.nickname)
+      setEditMsg(data.message)
+      setModalMode('edit')
+    }
+    setPwInput('')
+  }
+
+  // ── 수정 저장 ─────────────────────────────────────────────────────────────────
+  async function handleEditSave() {
+    if (!modalStarId || !editNick.trim() || !editMsg.trim()) return
+
+    const { error } = await supabase
+      .from('star_messages')
+      .update({ nickname: editNick.trim(), message: editMsg.trim() })
+      .eq('id', modalStarId)
+
+    if (!error) {
+      setUserStars(prev => prev.map(s =>
+        s.id === modalStarId
+          ? { ...s, nickname: editNick.trim(), message: editMsg.trim() }
+          : s
+      ))
+    }
+    setModalMode('none')
+  }
+
+  // ── 툴팁 위치 (pointer-events 제거 — 버튼 클릭 가능) ─────────────────────────
   function tooltipPos(star: StarData): string {
     const vert  = star.y <= 30 ? 'top-full mt-2' : 'bottom-full mb-2'
     const horiz = star.x <= 20 ? 'left-0'
                 : star.x >= 80 ? 'right-0'
                 : 'left-1/2 -translate-x-1/2'
-    return `absolute ${vert} ${horiz} w-36 rounded-lg px-3 py-2 text-left pointer-events-none`
+    return `absolute ${vert} ${horiz} w-40 rounded-lg px-3 py-2 text-left`
   }
+
+  const inputCls = 'msg-input w-full bg-charcoal border-[0.5px] border-gold/50 rounded-lg px-4 py-3 font-sans text-sm text-warm-white placeholder:text-warm-white/30 outline-none focus:border-gold transition-colors'
 
   return (
     <section className="bg-charcoal">
@@ -247,7 +341,7 @@ export default function MessageSection() {
         </p>
       </div>
 
-      {/* 밤하늘 영역 — isMounted 전까지 별 없음 */}
+      {/* 밤하늘 */}
       <div
         ref={skyRef}
         className="relative mx-6 h-80 border border-warm-white/10 rounded-xl overflow-hidden"
@@ -284,6 +378,7 @@ export default function MessageSection() {
                 <div
                   className={tooltipPos(star)}
                   style={{ backgroundColor: '#2A2A2A', border: '1px solid #B8956A', zIndex: 101 }}
+                  onClick={e => e.stopPropagation()} // 툴팁 내 클릭이 별 버튼 토글로 전파되지 않도록
                 >
                   <p className="font-sans text-[11px] text-gold font-medium truncate">
                     {star.nickname}{isMyStar ? ' ✦' : ''}
@@ -291,6 +386,23 @@ export default function MessageSection() {
                   <p className="font-sans text-[10px] text-warm-white/65 mt-0.5 leading-relaxed">
                     {star.message}
                   </p>
+                  {/* 내 별에만 수정/삭제 버튼 표시 */}
+                  {isMyStar && (
+                    <div className="flex gap-1.5 mt-2">
+                      <button
+                        onClick={e => { e.stopPropagation(); openPwModal(star.id, 'edit') }}
+                        className="flex-1 py-1 rounded font-sans text-[10px] text-warm-white/60 border-[0.5px] border-warm-white/20 hover:border-gold/50 hover:text-warm-white transition-colors"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={e => { e.stopPropagation(); openPwModal(star.id, 'delete') }}
+                        className="flex-1 py-1 rounded font-sans text-[10px] text-warm-white/60 border-[0.5px] border-warm-white/20 hover:border-red-400/50 hover:text-red-400 transition-colors"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
               <svg
@@ -326,7 +438,6 @@ export default function MessageSection() {
       {/* 입력 폼 */}
       <div className="px-6 pb-14 pt-6">
         <div className="space-y-3">
-          {/* 내 별 찾기 — myStarIds에 값이 있을 때만 표시 */}
           {myStarIds.length > 0 && (
             <button
               onClick={findMyStar}
@@ -342,7 +453,7 @@ export default function MessageSection() {
             onChange={e => setNickname(e.target.value)}
             placeholder="닉네임 (최대 10자)"
             maxLength={10}
-            className="msg-input w-full bg-charcoal border-[0.5px] border-gold/50 rounded-lg px-4 py-3 font-sans text-sm text-warm-white placeholder:text-warm-white/30 outline-none focus:border-gold transition-colors"
+            className={inputCls}
           />
           <textarea
             value={message}
@@ -350,11 +461,21 @@ export default function MessageSection() {
             placeholder="두 분께 전하는 축하 메시지 (최대 50자)"
             maxLength={50}
             rows={2}
-            className="msg-input w-full bg-charcoal border-[0.5px] border-gold/50 rounded-lg px-4 py-3 font-sans text-sm text-warm-white placeholder:text-warm-white/30 outline-none focus:border-gold resize-none transition-colors"
+            className={`${inputCls} resize-none`}
+          />
+          <input
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={password}
+            onChange={e => setPassword(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            placeholder="비밀번호 4자리 숫자"
+            maxLength={4}
+            className={inputCls}
           />
           <button
             onClick={addStar}
-            disabled={!nickname.trim() || !message.trim() || isSubmitting}
+            disabled={!nickname.trim() || !message.trim() || password.length !== 4 || isSubmitting}
             className="w-full py-3.5 rounded-lg bg-gold text-warm-white font-sans text-sm font-medium tracking-wide disabled:opacity-30 transition-opacity"
           >
             {submitted ? '별이 추가되었어요 ✨' : '별 달기'}
@@ -362,13 +483,134 @@ export default function MessageSection() {
         </div>
       </div>
 
-      {/* 토스트 — 아직 별 없음 */}
-      <div
-        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-2 rounded-full bg-charcoal border border-warm-white/20 text-warm-white/70 font-sans text-xs tracking-wide whitespace-nowrap transition-opacity duration-300 ${
-          noStarToast ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
+      {/* ── 비밀번호 확인 모달 ─────────────────────────────────────────────────── */}
+      {modalMode === 'pw_check' && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-6"
+          style={MODAL_OVERLAY}
+          onClick={() => setModalMode('none')}
+        >
+          <div
+            className="w-full max-w-xs rounded-2xl px-6 py-7 relative"
+            style={MODAL_CARD}
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setModalMode('none')}
+              className="absolute top-4 right-4 text-warm-white/40 w-7 h-7 flex items-center justify-center hover:text-warm-white/70 transition-colors"
+              aria-label="닫기"
+            >✕</button>
+
+            <h3 className="font-serif text-lg text-gold tracking-wide text-center mb-1">
+              비밀번호 확인
+            </h3>
+            <p className="font-sans text-[11px] text-warm-white/45 text-center mb-5">
+              {modalAction === 'delete' ? '삭제' : '수정'}하려면 비밀번호를 입력해주세요
+            </p>
+
+            <input
+              type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={pwInput}
+              onChange={e => setPwInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              placeholder="4자리 숫자"
+              maxLength={4}
+              className={inputCls}
+              autoFocus
+            />
+
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => setModalMode('none')}
+                className="flex-1 py-3 rounded-lg font-sans text-sm text-warm-white/50 border-[0.5px] border-warm-white/20"
+              >
+                취소
+              </button>
+              <button
+                onClick={handlePwConfirm}
+                disabled={pwInput.length !== 4}
+                className="flex-1 py-3 rounded-lg bg-gold text-warm-white font-sans text-sm font-medium disabled:opacity-30"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 수정 모달 ──────────────────────────────────────────────────────────── */}
+      {modalMode === 'edit' && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-6"
+          style={MODAL_OVERLAY}
+          onClick={() => setModalMode('none')}
+        >
+          <div
+            className="w-full max-w-xs rounded-2xl px-6 py-7 relative"
+            style={MODAL_CARD}
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setModalMode('none')}
+              className="absolute top-4 right-4 text-warm-white/40 w-7 h-7 flex items-center justify-center hover:text-warm-white/70 transition-colors"
+              aria-label="닫기"
+            >✕</button>
+
+            <h3 className="font-serif text-lg text-gold tracking-wide text-center mb-5">
+              별 수정
+            </h3>
+
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={editNick}
+                onChange={e => setEditNick(e.target.value)}
+                placeholder="닉네임"
+                maxLength={10}
+                className={inputCls}
+              />
+              <textarea
+                value={editMsg}
+                onChange={e => setEditMsg(e.target.value)}
+                placeholder="메시지"
+                maxLength={50}
+                rows={2}
+                className={`${inputCls} resize-none`}
+              />
+            </div>
+
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => setModalMode('none')}
+                className="flex-1 py-3 rounded-lg font-sans text-sm text-warm-white/50 border-[0.5px] border-warm-white/20"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleEditSave}
+                disabled={!editNick.trim() || !editMsg.trim()}
+                className="flex-1 py-3 rounded-lg bg-gold text-warm-white font-sans text-sm font-medium disabled:opacity-30"
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 토스트 ─────────────────────────────────────────────────────────────── */}
+      {/* 아직 별 없음 */}
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-2 rounded-full bg-charcoal border border-warm-white/20 text-warm-white/70 font-sans text-xs tracking-wide whitespace-nowrap transition-opacity duration-300 ${noStarToast ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         아직 별을 달지 않으셨어요
+      </div>
+      {/* 비밀번호 오류 */}
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-2 rounded-full bg-charcoal border border-warm-white/20 text-warm-white/70 font-sans text-xs tracking-wide whitespace-nowrap transition-opacity duration-300 ${pwErrToast ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        비밀번호가 올바르지 않아요
+      </div>
+      {/* 삭제 완료 */}
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-2 rounded-full bg-charcoal border border-warm-white/20 text-warm-white/70 font-sans text-xs tracking-wide whitespace-nowrap transition-opacity duration-300 ${deleteToast ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        별이 삭제되었어요
       </div>
     </section>
   )
