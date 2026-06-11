@@ -104,28 +104,70 @@ export default function AdminPage() {
           </p>
 
           <div className="space-y-3">
-            <input
-              type="password"
-              inputMode="numeric"
-              value={groom}
-              onChange={e => { setGroom(e.target.value.replace(/\D/g, '').slice(0, 8)); setAuthErr(false) }}
-              onKeyDown={handleKeyDown}
-              placeholder="신랑 생년월일 8자리 예: 19960315"
-              maxLength={8}
-              className={INPUT_CLS}
-              autoComplete="off"
-            />
-            <input
-              type="password"
-              inputMode="numeric"
-              value={bride}
-              onChange={e => { setBride(e.target.value.replace(/\D/g, '').slice(0, 8)); setAuthErr(false) }}
-              onKeyDown={handleKeyDown}
-              placeholder="신부 생년월일 8자리 예: 19970823"
-              maxLength={8}
-              className={INPUT_CLS}
-              autoComplete="off"
-            />
+            <div className="relative">
+              <input
+                type={showGroom ? 'text' : 'password'}
+                inputMode="numeric"
+                value={groom}
+                onChange={e => { setGroom(e.target.value.replace(/\D/g, '').slice(0, 8)); setAuthErr(false) }}
+                onKeyDown={handleKeyDown}
+                placeholder="신랑 생년월일 8자리 예: 19960315"
+                maxLength={8}
+                className={INPUT_CLS + ' pr-11'}
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                onClick={() => setShowGroom(v => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
+                tabIndex={-1}
+              >
+                {showGroom ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8956A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8956A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+            <div className="relative">
+              <input
+                type={showBride ? 'text' : 'password'}
+                inputMode="numeric"
+                value={bride}
+                onChange={e => { setBride(e.target.value.replace(/\D/g, '').slice(0, 8)); setAuthErr(false) }}
+                onKeyDown={handleKeyDown}
+                placeholder="신부 생년월일 8자리 예: 19970823"
+                maxLength={8}
+                className={INPUT_CLS + ' pr-11'}
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                onClick={() => setShowBride(v => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
+                tabIndex={-1}
+              >
+                {showBride ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8956A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8956A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                )}
+              </button>
+            </div>
 
             {authErr && (
               <p className="font-sans text-xs text-center" style={{ color: '#F87171' }}>
