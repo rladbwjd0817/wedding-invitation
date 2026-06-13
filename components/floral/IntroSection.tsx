@@ -76,17 +76,22 @@ export default function FloralIntroSection() {
             viewBox="0 0 40 40"
             style={{ transform: `rotate(${p.rotate}deg)` }}
           >
+            {/* 벚꽃 꽃잎 — 위 두 갈래 둥근 로브, 아래 줄기 포인트 */}
             <path
-              d="M20 4 C24 4, 34 10, 34 20 C34 28, 26 36, 20 36 C14 36, 6 28, 6 20 C6 10, 16 4, 20 4Z"
+              d="M20 36 C5 28, 1 13, 7 7 C12 1, 18 7, 20 14 C22 7, 28 1, 33 7 C39 13, 35 28, 20 36Z"
               fill={p.color} opacity="0.85"
             />
+            {/* 왼쪽 면 광택 (수채화 질감) */}
             <path
-              d="M20 4 C16 4, 6 10, 6 20 C6 28, 14 36, 20 36"
-              fill="white" opacity="0.3"
+              d="M20 36 C5 28, 1 13, 7 7 C12 1, 18 7, 20 14"
+              fill="white" opacity="0.22"
             />
-            <line x1="20" y1="8" x2="20" y2="32" stroke="white" strokeWidth="0.8" opacity="0.4" />
-            <line x1="20" y1="8" x2="12" y2="26" stroke="white" strokeWidth="0.5" opacity="0.3" />
-            <line x1="20" y1="8" x2="28" y2="26" stroke="white" strokeWidth="0.5" opacity="0.3" />
+            {/* 중심 맥 — 줄기에서 상단 노치까지 */}
+            <line x1="20" y1="33" x2="20" y2="14" stroke="white" strokeWidth="0.7" opacity="0.4" />
+            {/* 왼쪽 맥 */}
+            <path d="M20 27 Q13 19 9 10" fill="none" stroke="white" strokeWidth="0.5" opacity="0.3" />
+            {/* 오른쪽 맥 */}
+            <path d="M20 27 Q27 19 31 10" fill="none" stroke="white" strokeWidth="0.5" opacity="0.3" />
           </svg>
         </div>
       ))}
