@@ -13,25 +13,38 @@ const KAKAO_APP_KEY = 'ce0b7f577dbd7031221c5f63035179b4'
 export default function ShareSection() {
   const [toast, setToast]         = useState(false)
   const [flowerModal, setFlower]  = useState(false)
+  const [kakaoReady, setKakaoReady] = useState(false)
 
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js'
-    script.onload = () => {
+    const existingScript = document.querySelector('script[src*="kakao_js_sdk"]')
+
+    const initKakao = () => {
       if (window.Kakao && !window.Kakao.isInitialized()) {
         window.Kakao.init(KAKAO_APP_KEY)
       }
+      setKakaoReady(true)
     }
-    document.head.appendChild(script)
 
-    return () => {
-      const existing = document.querySelector('script[src*="kakao_js_sdk"]')
-      if (existing) existing.remove()
+    if (existingScript) {
+      if (window.Kakao) {
+        initKakao()
+      } else {
+        existingScript.addEventListener('load', initKakao)
+      }
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js'
+      script.async = true
+      script.onload = initKakao
+      document.head.appendChild(script)
     }
   }, [])
 
   function handleKakao() {
-    if (!window.Kakao?.Share) return
+    if (!kakaoReady || !window.Kakao?.Share) {
+      alert('카카오 SDK가 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.')
+      return
+    }
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
