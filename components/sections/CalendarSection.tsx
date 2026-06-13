@@ -1,5 +1,7 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+
 // 결혼 날짜 — 나중에 props로 교체 예정
 const WEDDING_YEAR = 2027
 const WEDDING_MONTH = 10  // 1-indexed
@@ -26,9 +28,12 @@ function calcDDay(year: number, month: number, day: number): number {
 
 export default function CalendarSection() {
   const days = buildCalendarDays(WEDDING_YEAR, WEDDING_MONTH)
-  const diff = calcDDay(WEDDING_YEAR, WEDDING_MONTH, WEDDING_DAY)
-  const dDayLabel =
-    diff > 0 ? `D-${diff}` : diff === 0 ? 'D-day' : `D+${Math.abs(diff)}`
+  const [dDayLabel, setDDayLabel] = useState<string>('')
+
+  useEffect(() => {
+    const diff = calcDDay(WEDDING_YEAR, WEDDING_MONTH, WEDDING_DAY)
+    setDDayLabel(diff > 0 ? `D-${diff}` : diff === 0 ? 'D-day' : `D+${Math.abs(diff)}`)
+  }, [])
 
   return (
     <section className="py-16 px-6 bg-charcoal text-center">
