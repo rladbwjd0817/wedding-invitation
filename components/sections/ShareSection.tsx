@@ -41,6 +41,7 @@ export default function ShareSection() {
   }, [])
 
   function handleKakao() {
+    console.log('kakaoReady:', kakaoReady, '/ Kakao:', window.Kakao, '/ Share:', window.Kakao?.Share)
     if (!kakaoReady || !window.Kakao?.Share) {
       alert('카카오 SDK가 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.')
       return
