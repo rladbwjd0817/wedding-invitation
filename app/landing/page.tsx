@@ -7,7 +7,7 @@ import Image from 'next/image'
 
 const dancing = Dancing_Script({ subsets: ['latin'], weight: ['700'] })
 
-const FULL_TEXT = 'We are Married'
+const FULL_TEXT = 'We are getting Married'
 
 export default function LandingPage() {
   const router = useRouter()
