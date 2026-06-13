@@ -67,7 +67,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 flex items-center justify-center">
           <p
             className={dancing.className}
-            style={{ color: '#FAF8F3', fontSize: 48, letterSpacing: '0.02em' }}
+            style={{ color: '#FAF8F3', fontSize: 48, letterSpacing: '0.02em', textAlign: 'center' }}
           >
             {displayed}
             {showCursor && <span className="cursor">|</span>}
