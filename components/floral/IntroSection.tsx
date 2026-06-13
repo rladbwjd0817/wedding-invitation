@@ -13,7 +13,7 @@ interface Petal {
   color:  string
 }
 
-const PETAL_COLORS = ['#C9848A', '#D4B896', '#E8C0C4', '#DBA8AC', '#F0D0D4']
+const PETAL_COLORS = ['#E8A0A8', '#D4848C', '#F2B8BC']
 
 // 결정론적 생성 — Math.random() 사용 안 함 (hydration 안전)
 function makePetals(count: number): Petal[] {
@@ -22,7 +22,7 @@ function makePetals(count: number): Petal[] {
     x:      (i * 37 + 5) % 95,
     delay:  parseFloat(((i * 0.7) % 6).toFixed(1)),
     dur:    parseFloat((5 + (i * 0.45) % 4).toFixed(1)),
-    size:   8 + (i % 3) * 5,
+    size:   10 + (i * 7 % 11),  // 10~20px
     rotate: (i * 53) % 360,
     color:  PETAL_COLORS[i % PETAL_COLORS.length],
   }))
@@ -72,12 +72,21 @@ export default function FloralIntroSection() {
         >
           <svg
             width={p.size}
-            height={Math.round(p.size * 1.5)}
-            viewBox="0 0 20 30"
+            height={p.size}
+            viewBox="0 0 40 40"
             style={{ transform: `rotate(${p.rotate}deg)` }}
           >
-            <ellipse cx="10" cy="15" rx="8"  ry="14" fill={p.color} opacity="0.5" />
-            <ellipse cx="10" cy="15" rx="3.5" ry="9" fill={p.color} opacity="0.25" />
+            <path
+              d="M20 4 C24 4, 34 10, 34 20 C34 28, 26 36, 20 36 C14 36, 6 28, 6 20 C6 10, 16 4, 20 4Z"
+              fill={p.color} opacity="0.85"
+            />
+            <path
+              d="M20 4 C16 4, 6 10, 6 20 C6 28, 14 36, 20 36"
+              fill="white" opacity="0.3"
+            />
+            <line x1="20" y1="8" x2="20" y2="32" stroke="white" strokeWidth="0.8" opacity="0.4" />
+            <line x1="20" y1="8" x2="12" y2="26" stroke="white" strokeWidth="0.5" opacity="0.3" />
+            <line x1="20" y1="8" x2="28" y2="26" stroke="white" strokeWidth="0.5" opacity="0.3" />
           </svg>
         </div>
       ))}
