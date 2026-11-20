@@ -6,6 +6,10 @@
   --color-warm-white: #FAF8F3;
   --color-gold: #B8956A;
 
+  /* 봉투(크라프트) 토큰 — 랜딩 봉투 컨셉용 */
+  --color-kraft: #C6AC7E;
+  --color-kraft-dark: #A98E60;
+
   /* 폰트 토큰 */
   --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
