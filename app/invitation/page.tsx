@@ -40,7 +40,7 @@ export default function InvitationPage() {
       <div className="mx-auto w-full max-w-[420px] bg-warm-white">
         <Reveal><IntroSection /></Reveal>
         {divider}
-        <Reveal><GreetingSection /></Reveal>
+        <Reveal delay={180}><GreetingSection /></Reveal>
         {divider}
         <Reveal><GallerySection images={weddingData.galleryImages} /></Reveal>
         <div id="rsvp-trigger" />
