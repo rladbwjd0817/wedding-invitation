@@ -29,11 +29,11 @@ export default function InfoSection() {
 
         {/* 화동 안내 */}
         <InfoCard title="🌸 화동 소개">
-          <p className="font-sans text-sm text-warm-white/90 font-medium">정유누</p>
-          <p className="font-sans text-xs text-warm-white/45 mt-0.5 mb-3">신부 지인 아들</p>
+          <p className="font-sans text-sm text-warm-white/90 font-medium">김도윤</p>
+          <p className="font-sans text-xs text-warm-white/45 mt-0.5 mb-3">신부 친척 동생</p>
           <p className="font-sans text-xs text-warm-white/65 leading-relaxed">
             오늘 꽃길을 함께 걸어줄 작은 친구,<br />
-            정유누가 두 사람의 첫 걸음을 빛내줄 거예요 ✨
+            김도윤이 두 사람의 첫 걸음을 빛내줄 거예요 ✨
           </p>
         </InfoCard>
 
