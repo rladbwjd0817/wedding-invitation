@@ -8,6 +8,7 @@ import MessageSection from "@/components/sections/MessageSection";
 import InfoSection from "@/components/sections/InfoSection";
 import ShareSection from "@/components/sections/ShareSection";
 import RsvpPopup from "@/components/RsvpPopup";
+import Reveal from "@/components/Reveal";
 
 // 임시 더미 데이터 — 나중에 props/DB로 교체 예정
 const weddingData = {
@@ -37,24 +38,24 @@ export default function InvitationPage() {
     <div className="min-h-screen bg-warm-white">
       {/* 모바일 기준 컨테이너 — 데스크탑에서는 가운데 정렬 */}
       <div className="mx-auto w-full max-w-[420px] bg-warm-white">
-        <IntroSection />
+        <Reveal><IntroSection /></Reveal>
         {divider}
-        <GreetingSection />
+        <Reveal><GreetingSection /></Reveal>
         {divider}
-        <GallerySection images={weddingData.galleryImages} />
+        <Reveal><GallerySection images={weddingData.galleryImages} /></Reveal>
         <div id="rsvp-trigger" />
         {divider}
-        <CalendarSection />
+        <Reveal><CalendarSection /></Reveal>
         {divider}
-        <LocationSection />
+        <Reveal><LocationSection /></Reveal>
         {divider}
-        <MoneySection />
+        <Reveal><MoneySection /></Reveal>
         {divider}
-        <MessageSection />
+        <Reveal><MessageSection /></Reveal>
         {divider}
-        <InfoSection />
+        <Reveal><InfoSection /></Reveal>
       </div>
-      <ShareSection />
+      <Reveal><ShareSection /></Reveal>
       <RsvpPopup />
     </div>
   );
